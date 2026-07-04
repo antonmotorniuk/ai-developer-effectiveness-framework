@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/ai-effectiveness/session.schema.json",
+  "title": "AI Effectiveness Session Retro",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "client",
+    "task",
+    "task_type",
+    "overall_score",
+    "dimensions",
+    "recommendation",
+    "profile_update"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "client": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "task": {
+      "type": "string"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "bugfix",
+        "feature",
+        "refactor",
+        "test",
+        "docs",
+        "investigation",
+        "review",
+        "other"
+      ]
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "score",
+          "evidence",
+          "improvement"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "improvement": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "what_worked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "what_reduced_effectiveness": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommendation": {
+      "type": "string"
+    },
+    "profile_update": {
+      "type": "object",
+      "required": [
+        "strengths_observed",
+        "weaknesses_or_antipatterns",
+        "suggested_memory_or_rule"
+      ],
+      "properties": {
+        "strengths_observed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "weaknesses_or_antipatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suggested_memory_or_rule": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}

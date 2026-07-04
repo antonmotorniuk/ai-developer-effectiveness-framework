@@ -1,0 +1,25 @@
+{
+  "schema_version": "ai-effectiveness-config-v0.1",
+  "methodology_name": "AI Developer Effectiveness Framework",
+  "purpose": "Personal coaching and research for improving AI-assisted software development workflow.",
+  "not_for": [
+    "performance punishment",
+    "employee surveillance",
+    "compensation decisions"
+  ],
+  "dimensions": [
+    "Problem framing",
+    "Context quality",
+    "Planning discipline",
+    "Tool/model/mode usage",
+    "Verification discipline",
+    "Ownership and understanding",
+    "Learning loop"
+  ],
+  "score_range": {
+    "dimension_min": 0,
+    "dimension_max": 5,
+    "overall_min": 0,
+    "overall_max": 100
+  }
+}
