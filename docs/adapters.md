@@ -9,20 +9,20 @@ The core is:
 ```text
 .ai-effectiveness/
   config.json
+  save_retro.py
+  validate_session.py
   sessions.md
   sessions.jsonl
   profile-updates.md
-
-tools/
-  ai-effectiveness/
-    save_retro.py
 ```
 
 Any AI agent can use the framework if it can:
 
 1. evaluate a completed session;
 2. produce a JSON retro object;
-3. pass that JSON to `tools/ai-effectiveness/save_retro.py`.
+3. pass that JSON to `.ai-effectiveness/save_retro.py`.
+
+Target-project installs are local-first. Keep runtime files and session outputs inside `.ai-effectiveness/`; project instruction files should be optional adapter surface, not required core storage.
 
 ## Codex adapter
 

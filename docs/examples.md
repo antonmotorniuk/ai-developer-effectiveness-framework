@@ -3,15 +3,27 @@
 ## Closing a session in Codex
 
 ```text
-$ai-effectiveness-coach close the session for task "Fix login redirect bug"
+close ai session
+```
+
+or:
+
+```text
+$ai-effectiveness-coach close
+```
+
+Optional explicit task name:
+
+```text
+$ai-effectiveness-coach close for task "Fix login redirect bug"
 ```
 
 ## Expected result
 
-The adapter produces a retro, then saves it through:
+The adapter produces a retro, then saves it through the local project script:
 
 ```bash
-python3 tools/ai-effectiveness/save_retro.py <<'JSON'
+python3 .ai-effectiveness/save_retro.py <<'JSON'
 { ... }
 JSON
 ```
@@ -35,6 +47,6 @@ examples/session-retro.sample.json
 Use it as the input shape for a smoke check in any project where the framework is installed:
 
 ```bash
-python3 tools/ai-effectiveness/save_retro.py < path/to/session-retro.sample.json
-python3 tools/ai-effectiveness/validate_session.py
+python3 .ai-effectiveness/save_retro.py < path/to/session-retro.sample.json
+python3 .ai-effectiveness/validate_session.py
 ```

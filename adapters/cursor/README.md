@@ -6,6 +6,6 @@ The core framework is already tool-agnostic. A Cursor adapter only needs to:
 
 1. add project/user rules for session closing;
 2. produce the standard JSON session object;
-3. call `tools/ai-effectiveness/save_retro.py`.
+3. call `.ai-effectiveness/save_retro.py`.
 
 This MVP intentionally supports explicit session closing only.

@@ -25,7 +25,9 @@ Open your target project in Codex, Claude Code, Cursor, or another AI coding ass
 install/agent-install-prompt.md
 ```
 
-The agent will install the framework into the current repository, adapt it to the current AI client if supported, and show the final list of changed files.
+The agent will install the framework as a local, project-scoped `.ai-effectiveness/` folder, adapt it to the current AI client if supported, and show the final list of changed files.
+
+By default, the installed framework is personal/local. You can ignore the whole `.ai-effectiveness/` folder in Git. If another developer wants the framework, they can run the same agent-led install prompt in their own workspace.
 
 This MVP intentionally does **not** provide a manual quick-start guide in the README. The intended user experience is:
 
@@ -48,12 +50,13 @@ Use the official repository:
 https://github.com/antonmotorniuk/ai-developer-effectiveness-framework
 
 Requirements:
-- install the core framework;
+- install the core framework locally under `.ai-effectiveness/`;
 - install the adapter for the current AI client if supported;
 - install only the explicit completed-session retro flow;
 - do not add hooks, wrappers, management reporting, or background automation;
 - do not modify application code;
-- preserve existing instruction files;
+- preserve existing instruction files unless I explicitly approve adapter changes;
+- offer to ignore `.ai-effectiveness/` in Git for personal/local use;
 - show the final list of created or modified files;
 - explain how I should close my first AI-assisted session.
 
@@ -66,16 +69,30 @@ Work normally in your AI coding assistant.
 
 At the end of a completed task, ask the agent to close the AI effectiveness session.
 
-For Codex, the command is usually:
+For Codex, use the short form:
 
 ```text
-$ai-effectiveness-coach close the session for task "Fix login redirect bug"
+close ai session
+```
+
+or:
+
+```text
+$ai-effectiveness-coach close
+```
+
+A task name is optional. If you do not provide one, the agent should infer a concise task title from the session and ask only when it cannot reasonably infer one.
+
+You can still provide an explicit task name when useful:
+
+```text
+$ai-effectiveness-coach close for task "Fix login redirect bug"
 ```
 
 For other clients, use the equivalent adapter instruction. If no adapter exists yet, ask the agent to produce a session retro JSON and pass it to:
 
 ```text
-tools/ai-effectiveness/save_retro.py
+.ai-effectiveness/save_retro.py
 ```
 
 ## What this framework evaluates
@@ -94,32 +111,39 @@ Each dimension is scored from `0` to `5`. The overall score is converted to a `0
 
 ## What gets installed into a target project
 
-After agent-led installation, the target project should contain:
+After agent-led installation, the target project should contain one local folder:
 
 ```text
 .ai-effectiveness/
   config.json
+  save_retro.py
+  validate_session.py
   sessions.md
   sessions.jsonl
   profile-updates.md
-
-tools/
-  ai-effectiveness/
-    save_retro.py
 ```
 
-Client adapters may add extra instruction files, for example:
+For personal use, this whole folder can be added to `.gitignore`:
+
+```gitignore
+.ai-effectiveness/
+```
+
+Client adapters should prefer user-level instructions when available. Project instruction files such as `AGENTS.md`, `CLAUDE.md`, or Cursor rules should only be changed when the user approves that adapter behavior or the client requires it.
+
+## Local files
+
+After installation, `.ai-effectiveness/` contains runtime files and personal session outputs.
+
+Runtime files:
 
 ```text
-AGENTS.md
-~/.agents/skills/ai-effectiveness-coach/SKILL.md
+.ai-effectiveness/config.json
+.ai-effectiveness/save_retro.py
+.ai-effectiveness/validate_session.py
 ```
 
-for Codex.
-
-## Output files
-
-After closing a session, the framework updates:
+Session output files:
 
 ```text
 .ai-effectiveness/sessions.md
@@ -127,10 +151,12 @@ After closing a session, the framework updates:
 .ai-effectiveness/profile-updates.md
 ```
 
+- `config.json` describes the methodology and scoring dimensions.
+- `save_retro.py` saves completed-session retros.
+- `validate_session.py` checks saved JSONL records.
 - `sessions.md` is a human-readable log.
 - `sessions.jsonl` is structured data for scripts, reports, and future personal analysis.
 - `profile-updates.md` stores repeated patterns, strengths, weaknesses, and coaching recommendations.
-- `config.json` describes the methodology and scoring dimensions.
 
 ## Example session record
 
@@ -253,6 +279,8 @@ The methodology, schema, and scripts are tool-agnostic. Client-specific integrat
 - [x] `save_retro.py`
 - [x] Codex adapter MVP
 - [x] Agent-led installation prompt
+- [x] Agent-led update prompt
+- [x] Agent-led uninstall prompt
 - [ ] Claude Code adapter
 - [ ] Cursor adapter
 - [ ] Weekly review command
@@ -268,19 +296,27 @@ python3 -m py_compile tools/ai-effectiveness/save_retro.py tools/ai-effectivenes
 python3 -m unittest discover -s tests
 ```
 
-## Publishing this project to GitHub
+The source repository keeps maintainer copies of the scripts under `tools/ai-effectiveness/`. Agent-led installation copies them into the target project's `.ai-effectiveness/` folder.
 
-This repository includes a helper script for publishing the framework to GitHub via GitHub CLI:
+## Updating
 
-```bash
-scripts/publish_to_github.sh ai-developer-effectiveness-framework --public
-```
-
-You can also ask your AI coding agent to publish the project using:
+To update an existing local install without deleting session history, open the target project in your AI coding assistant and paste:
 
 ```text
-install/agent-publish-prompt.md
+install/agent-update-prompt.md
 ```
+
+The update flow refreshes `.ai-effectiveness/config.json`, `.ai-effectiveness/save_retro.py`, `.ai-effectiveness/validate_session.py`, and the current client adapter while preserving `sessions.md`, `sessions.jsonl`, and `profile-updates.md`.
+
+## Uninstalling
+
+To remove the framework from a target project, open that project in your AI coding assistant and paste:
+
+```text
+install/agent-uninstall-prompt.md
+```
+
+The uninstall flow removes the local `.ai-effectiveness/` folder, cleans marked project instruction blocks, and asks before removing any user-level AI client skill because that can affect other repositories.
 
 ## License
 

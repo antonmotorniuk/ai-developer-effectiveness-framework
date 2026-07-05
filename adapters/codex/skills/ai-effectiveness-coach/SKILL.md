@@ -10,23 +10,33 @@ This is a Codex adapter for the tool-agnostic AI Developer Effectiveness Framewo
 Use this skill when the user asks to:
 
 - close an AI session,
+- close the current session,
 - run an AI retro,
 - evaluate the current AI-assisted development session,
 - save an AI effectiveness log,
 - update AI developer effectiveness history.
 
+Accept short close-session requests such as `close ai session`, `close session`, `save retro`, or `$ai-effectiveness-coach close`.
 Run this only when the user asks to evaluate a completed AI-assisted session.
 Do not create or use hooks or background automation.
+
+Task naming:
+
+- If the user provides a task name, use it.
+- If the user does not provide a task name, infer a concise task title from the conversation, visible changes, and commands run.
+- Ask for a task name only when no reasonable title can be inferred.
 
 Your job:
 
 1. Analyze the current AI-assisted development session.
 2. Evaluate how effectively the developer used AI.
 3. Produce a concise retro for the user.
-4. Save a structured log by running the project-local universal script:
+4. Save a structured log by running the project-local universal script.
+5. Validate the saved JSONL log when `.ai-effectiveness/validate_session.py` exists.
 
 ```bash
-python3 tools/ai-effectiveness/save_retro.py
+python3 .ai-effectiveness/save_retro.py
+python3 .ai-effectiveness/validate_session.py
 ```
 
 Use only evidence available in:
@@ -99,15 +109,20 @@ When saving, create a JSON object with this schema:
 Then run:
 
 ```bash
-python3 tools/ai-effectiveness/save_retro.py <<'JSON'
+python3 .ai-effectiveness/save_retro.py <<'JSON'
 <the JSON object>
 JSON
+python3 .ai-effectiveness/validate_session.py
 ```
+
+If the validator is not installed, skip validation and say that validation was not available.
 
 After saving, tell the user:
 
 - overall score,
-- weakest dimension,
+- main improvement area or areas,
 - main insight,
 - where the log was saved,
+- validation result, including whether `sessions.jsonl` contains a parsed session record,
+- that detailed dimension evidence and the score breakdown are in `.ai-effectiveness/sessions.md`,
 - one habit for the next task.

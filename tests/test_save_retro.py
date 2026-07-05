@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -9,7 +10,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "tools" / "ai-effectiveness" / "save_retro.py"
+SOURCE_SCRIPT = ROOT / "tools" / "ai-effectiveness" / "save_retro.py"
+SOURCE_VALIDATOR = ROOT / "tools" / "ai-effectiveness" / "validate_session.py"
+INSTALLED_SCRIPT = Path(".ai-effectiveness") / "save_retro.py"
+INSTALLED_VALIDATOR = Path(".ai-effectiveness") / "validate_session.py"
 
 
 def base_payload() -> dict:
@@ -47,10 +51,28 @@ def base_payload() -> dict:
     }
 
 
+def install_framework_scripts(project: Path) -> None:
+    out_dir = project / ".ai-effectiveness"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(SOURCE_SCRIPT, project / INSTALLED_SCRIPT)
+    shutil.copyfile(SOURCE_VALIDATOR, project / INSTALLED_VALIDATOR)
+
+
 def run_save_retro(cwd: Path, payload: dict) -> subprocess.CompletedProcess[str]:
+    install_framework_scripts(cwd)
     return subprocess.run(
-        [sys.executable, str(SCRIPT)],
+        [sys.executable, str(INSTALLED_SCRIPT)],
         input=json.dumps(payload),
+        text=True,
+        cwd=cwd,
+        capture_output=True,
+        check=False,
+    )
+
+
+def run_validator(cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(INSTALLED_VALIDATOR)],
         text=True,
         cwd=cwd,
         capture_output=True,
@@ -71,6 +93,8 @@ class SaveRetroTests(unittest.TestCase):
             sessions_md_path = out_dir / "sessions.md"
             profile_path = out_dir / "profile-updates.md"
 
+            self.assertTrue((out_dir / "save_retro.py").exists())
+            self.assertTrue((out_dir / "validate_session.py").exists())
             self.assertTrue(jsonl_path.exists())
             self.assertTrue(sessions_md_path.exists())
             self.assertTrue(profile_path.exists())
@@ -87,6 +111,10 @@ class SaveRetroTests(unittest.TestCase):
 
             profile_md = profile_path.read_text(encoding="utf-8")
             self.assertIn("Ask for acceptance criteria", profile_md)
+
+            validation = run_validator(project)
+            self.assertEqual(validation.returncode, 0, validation.stderr)
+            self.assertIn("Validation passed: 1 session(s).", validation.stdout)
 
     def test_normalizes_scores_task_type_and_sensitive_text(self) -> None:
         payload = base_payload()
