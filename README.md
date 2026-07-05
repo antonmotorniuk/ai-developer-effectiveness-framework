@@ -45,14 +45,13 @@ If you do not want to open the full prompt file, paste this into your AI coding 
 Install AI Developer Effectiveness Framework into this repository.
 
 Use the official repository:
-https://github.com/<OWNER>/ai-developer-effectiveness-framework
+https://github.com/antonmotorniuk/ai-developer-effectiveness-framework
 
 Requirements:
 - install the core framework;
 - install the adapter for the current AI client if supported;
-- do not enable startup advice;
-- do not enable SessionStart hooks;
-- do not enable hooks of any kind;
+- install only the explicit completed-session retro flow;
+- do not add hooks, wrappers, management reporting, or background automation;
 - do not modify application code;
 - preserve existing instruction files;
 - show the final list of created or modified files;
@@ -60,8 +59,6 @@ Requirements:
 
 Use install/agent-install-prompt.md as the full installation contract.
 ```
-
-Replace `<OWNER>` with the GitHub owner of this repository.
 
 ## Usage after installation
 
@@ -131,7 +128,7 @@ After closing a session, the framework updates:
 ```
 
 - `sessions.md` is a human-readable log.
-- `sessions.jsonl` is structured data for scripts, reports, dashboards, and future analysis.
+- `sessions.jsonl` is structured data for scripts, reports, and future personal analysis.
 - `profile-updates.md` stores repeated patterns, strengths, weaknesses, and coaching recommendations.
 - `config.json` describes the methodology and scoring dimensions.
 
@@ -202,12 +199,10 @@ The intended use is coaching, self-improvement, research, and team-level learnin
 
 This MVP does **not** include:
 
-- SessionStart hooks;
-- hooks of any kind;
-- startup advice shown before work starts;
+- lifecycle hooks or background automation;
+- proactive prompts before work begins;
 - desktop wrappers;
-- dashboards;
-- team analytics;
+- management reporting surfaces;
 - automatic chat transcript extraction.
 
 The first version focuses only on closing completed AI-assisted sessions and saving structured retrospectives.
@@ -263,8 +258,15 @@ The methodology, schema, and scripts are tool-agnostic. Client-specific integrat
 - [ ] Weekly review command
 - [ ] Markdown report generator
 - [ ] Charts from `sessions.jsonl`
-- [ ] Team-level anonymized insights
+- [ ] Privacy-preserving aggregate learning notes
 - [ ] Public article with first results
+
+## Development checks
+
+```bash
+python3 -m py_compile tools/ai-effectiveness/save_retro.py tools/ai-effectiveness/validate_session.py
+python3 -m unittest discover -s tests
+```
 
 ## Publishing this project to GitHub
 

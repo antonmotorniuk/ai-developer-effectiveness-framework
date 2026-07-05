@@ -9,5 +9,5 @@ Initial MVP:
 - universal `save_retro.py`;
 - Codex adapter MVP;
 - agent-led installation prompt;
-- no SessionStart hooks;
-- no startup advice.
+- explicit completed-session retro workflow;
+- no background automation.

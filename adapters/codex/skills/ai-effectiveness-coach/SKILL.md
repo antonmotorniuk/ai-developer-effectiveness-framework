@@ -15,10 +15,8 @@ Use this skill when the user asks to:
 - save an AI effectiveness log,
 - update AI developer effectiveness history.
 
-Do not run this automatically at the beginning of work.
-Do not show startup advice.
-Do not create or use SessionStart hooks.
-Do not create or use hooks of any kind.
+Run this only when the user asks to evaluate a completed AI-assisted session.
+Do not create or use hooks or background automation.
 
 Your job:
 
@@ -59,7 +57,7 @@ Evaluate these dimensions from 0 to 5:
 
 Overall score:
 
-- Convert the average dimension score to 0–100.
+- Convert the average dimension score to 0-100.
 - Example: average 3.5/5 = 70/100.
 
 Privacy rules:

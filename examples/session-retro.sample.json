@@ -1,0 +1,73 @@
+{
+  "schema_version": "ai-effectiveness-retro-v0.1",
+  "client": "codex",
+  "model": "unknown",
+  "task": "Fix login redirect bug",
+  "task_type": "bugfix",
+  "overall_score": 72,
+  "dimensions": [
+    {
+      "name": "Problem framing",
+      "score": 4,
+      "evidence": "The task and expected outcome were stated.",
+      "improvement": "Add explicit acceptance criteria before implementation."
+    },
+    {
+      "name": "Context quality",
+      "score": 4,
+      "evidence": "Relevant files and symptoms were inspected.",
+      "improvement": "Include a failing reproduction when available."
+    },
+    {
+      "name": "Planning discipline",
+      "score": 3,
+      "evidence": "A short implementation plan was used.",
+      "improvement": "Call out edge cases before editing."
+    },
+    {
+      "name": "Tool/model/mode usage",
+      "score": 3,
+      "evidence": "Repository search and targeted edits were used.",
+      "improvement": "Use review mode for risky diffs when available."
+    },
+    {
+      "name": "Verification discipline",
+      "score": 3,
+      "evidence": "A focused check was run.",
+      "improvement": "Run the broader regression suite or record why it was skipped."
+    },
+    {
+      "name": "Ownership and understanding",
+      "score": 4,
+      "evidence": "The developer reviewed the approach and constraints.",
+      "improvement": "Ask for a brief explanation of any unfamiliar code path."
+    },
+    {
+      "name": "Learning loop",
+      "score": 4,
+      "evidence": "A reusable habit was captured for future sessions.",
+      "improvement": "Update project instructions when the pattern repeats."
+    }
+  ],
+  "what_worked": [
+    "The task stayed narrow.",
+    "Relevant context was gathered before editing."
+  ],
+  "what_reduced_effectiveness": [
+    "Acceptance criteria were implicit.",
+    "Verification evidence was partial."
+  ],
+  "risks": [
+    "Edge cases may remain uncovered."
+  ],
+  "recommendation": "Before implementation, ask the agent to list assumptions, edge cases, and verification steps.",
+  "profile_update": {
+    "strengths_observed": [
+      "Good at narrowing a bugfix with AI."
+    ],
+    "weaknesses_or_antipatterns": [
+      "Sometimes starts implementation before acceptance criteria are explicit."
+    ],
+    "suggested_memory_or_rule": "Before implementation, list assumptions, edge cases, and verification steps."
+  }
+}

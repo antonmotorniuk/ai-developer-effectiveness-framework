@@ -34,9 +34,9 @@ AI-generated evaluation should be treated as a coaching signal, not a final judg
 
 Developers should be able to correct the evaluation when the AI did not observe something, such as tests run outside the chat.
 
-## Manager and team usage
+## Team learning
 
-If used in a team, prefer aggregate patterns over individual ranking.
+If outputs are discussed in a team, prefer voluntary aggregate patterns over individual ranking.
 
 Good team-level use:
 

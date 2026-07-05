@@ -54,8 +54,8 @@ Expected files:
 adapters/cursor/rules/ai-effectiveness.mdc
 ```
 
-## No SessionStart hooks
+## Explicit session closing
 
-This project intentionally does not include SessionStart hooks in the MVP.
+This project intentionally evaluates completed sessions only.
 
-Session closing is explicit: the user asks the agent to close/evaluate/save the session.
+Session closing is explicit: the user asks the agent to close, evaluate, and save the session.

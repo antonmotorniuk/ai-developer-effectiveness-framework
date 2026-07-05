@@ -17,9 +17,9 @@ Use these files:
 
 Rules:
 
-- Do not show startup advice automatically.
-- Do not use or create SessionStart hooks.
-- Do not use or create hooks of any kind for this framework unless the user explicitly changes the framework scope later.
+- Run only when the user explicitly asks to close, review, evaluate, or save an AI-assisted work session.
+- Keep session closing explicit.
+- Do not use or create hooks of any kind for this framework.
 - Do not interrupt normal development workflow.
 - Do not invent evidence.
 - If something was not visible in the session, write `not observed`.
