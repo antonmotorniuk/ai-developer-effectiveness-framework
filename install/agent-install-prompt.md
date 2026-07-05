@@ -41,8 +41,9 @@ Expected local files:
 - .ai-effectiveness/profile-updates.md
 
 Expected adapter behavior:
-- If this is Codex, install or update the Codex user-level skill if available:
+- If this is Codex, install or update the Codex user-level skills if available:
   - ~/.codex/skills/ai-effectiveness-coach/SKILL.md
+  - ~/.codex/skills/ai-coach/SKILL.md
   - or the current Codex environment's equivalent user skill directory.
 - If a user-level skill directory is not available, place adapter instructions under `.ai-effectiveness/adapters/codex/` and explain how to install them manually.
 - If this is Claude Code, install or propose the Claude Code adapter if supported by the current repository and client.
@@ -70,9 +71,20 @@ close ai session
 
 or:
 
+$ai-coach close
+
+or:
+
 $ai-effectiveness-coach close
 
 The task name is optional. If I do not provide one, infer a concise task title from the session and ask only when the task cannot be reasonably inferred.
+
+I should also be able to ask:
+
+$ai-coach help
+$ai-coach update
+$ai-coach add-provider codex
+$ai-coach uninstall
 
 The framework should then save:
 - .ai-effectiveness/sessions.md

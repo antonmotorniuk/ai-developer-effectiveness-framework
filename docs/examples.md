@@ -9,6 +9,12 @@ close ai session
 or:
 
 ```text
+$ai-coach close
+```
+
+The longer Codex skill name remains supported:
+
+```text
 $ai-effectiveness-coach close
 ```
 
@@ -17,6 +23,19 @@ Optional explicit task name:
 ```text
 $ai-effectiveness-coach close for task "Fix login redirect bug"
 ```
+
+## Local framework commands
+
+These are prompts to your AI agent, not terminal commands:
+
+```text
+$ai-coach help
+$ai-coach update
+$ai-coach add-provider codex
+$ai-coach uninstall
+```
+
+Use `add-provider` for AI coding client adapters such as `codex`, `claude-code`, or `cursor`.
 
 ## Expected result
 

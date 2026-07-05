@@ -16,7 +16,7 @@ Use this skill when the user asks to:
 - save an AI effectiveness log,
 - update AI developer effectiveness history.
 
-Accept short close-session requests such as `close ai session`, `close session`, `save retro`, or `$ai-effectiveness-coach close`.
+Accept short close-session requests such as `close ai session`, `close session`, `save retro`, `$ai-coach close`, or `$ai-effectiveness-coach close`.
 Run this only when the user asks to evaluate a completed AI-assisted session.
 Do not create or use hooks or background automation.
 

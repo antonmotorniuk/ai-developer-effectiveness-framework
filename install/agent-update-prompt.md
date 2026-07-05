@@ -27,8 +27,9 @@ Refresh these files from the current framework version:
 - .ai-effectiveness/validate_session.py
 
 Adapter update behavior:
-- If this is Codex, update the Codex user-level skill if available:
+- If this is Codex, update the Codex user-level skills if available:
   - ~/.codex/skills/ai-effectiveness-coach/SKILL.md
+  - ~/.codex/skills/ai-coach/SKILL.md
   - or the current Codex environment's equivalent user skill directory.
 - If adapter instructions are stored under `.ai-effectiveness/adapters/`, refresh those copies too.
 - Do not modify project instruction files such as AGENTS.md, CLAUDE.md, or Cursor rules unless I explicitly approve it or the client cannot work without it.
@@ -51,4 +52,5 @@ Implementation requirements:
    - `python3 -m py_compile .ai-effectiveness/save_retro.py .ai-effectiveness/validate_session.py`
    - `python3 .ai-effectiveness/validate_session.py`
 7. Show the final list of changed files.
-8. Remind me that I can close a session with `close ai session` or `$ai-effectiveness-coach close`.
+8. Remind me that I can close a session with `close ai session`, `$ai-coach close`, or `$ai-effectiveness-coach close`.
+9. Remind me that `$ai-coach help` lists update, add-provider, and uninstall commands.

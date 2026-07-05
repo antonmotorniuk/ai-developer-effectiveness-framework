@@ -9,6 +9,8 @@
 - removed GitHub publishing helper files from the MVP surface;
 - added an agent-led uninstall prompt for local and optional client-level cleanup;
 - added an agent-led update prompt that preserves session history;
+- added an agent-led add-provider prompt for adding client adapters to existing installs;
+- added `$ai-coach` command aliases for help, close, update, add-provider, and uninstall;
 - made task names optional for close-session requests and documented shorter close commands.
 
 ## 0.1.0

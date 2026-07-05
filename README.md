@@ -78,6 +78,12 @@ close ai session
 or:
 
 ```text
+$ai-coach close
+```
+
+The longer skill name remains supported:
+
+```text
 $ai-effectiveness-coach close
 ```
 
@@ -88,6 +94,28 @@ You can still provide an explicit task name when useful:
 ```text
 $ai-effectiveness-coach close for task "Fix login redirect bug"
 ```
+
+## Agent commands
+
+After installation, these are prompts to your AI coding agent, not terminal commands:
+
+```text
+$ai-coach help
+$ai-coach close
+$ai-coach update
+$ai-coach add-provider codex
+$ai-coach uninstall
+```
+
+`provider` means AI coding client adapter, such as `codex`, `claude-code`, or `cursor`.
+
+The command behavior is intentionally explicit:
+
+- `close` evaluates and saves a completed AI-assisted session.
+- `update` refreshes local runtime files and the current adapter while preserving session history.
+- `add-provider <provider>` adds or refreshes an adapter for another AI coding client when supported.
+- `uninstall` removes the local project integration and asks before deleting session history or user-level skills.
+- `help` explains the available commands without modifying files.
 
 For other clients, use the equivalent adapter instruction. If no adapter exists yet, ask the agent to produce a session retro JSON and pass it to:
 
@@ -272,6 +300,22 @@ Planned adapters:
 
 The methodology, schema, and scripts are tool-agnostic. Client-specific integrations are adapters.
 
+## Adding another provider
+
+To add an adapter for another AI coding client to an existing local install, ask your AI agent:
+
+```text
+$ai-coach add-provider claude-code
+```
+
+or paste:
+
+```text
+install/agent-add-provider-prompt.md
+```
+
+Unsupported providers should leave the core `.ai-effectiveness/` files untouched and explain what adapter work is still missing.
+
 ## Roadmap
 
 - [x] Core session schema
@@ -281,6 +325,7 @@ The methodology, schema, and scripts are tool-agnostic. Client-specific integrat
 - [x] Agent-led installation prompt
 - [x] Agent-led update prompt
 - [x] Agent-led uninstall prompt
+- [x] Agent-led add-provider prompt
 - [ ] Claude Code adapter
 - [ ] Cursor adapter
 - [ ] Weekly review command
@@ -306,6 +351,12 @@ To update an existing local install without deleting session history, open the t
 install/agent-update-prompt.md
 ```
 
+After the Codex adapter is installed, you can also ask:
+
+```text
+$ai-coach update
+```
+
 The update flow refreshes `.ai-effectiveness/config.json`, `.ai-effectiveness/save_retro.py`, `.ai-effectiveness/validate_session.py`, and the current client adapter while preserving `sessions.md`, `sessions.jsonl`, and `profile-updates.md`.
 
 ## Uninstalling
@@ -314,6 +365,12 @@ To remove the framework from a target project, open that project in your AI codi
 
 ```text
 install/agent-uninstall-prompt.md
+```
+
+After the Codex adapter is installed, you can also ask:
+
+```text
+$ai-coach uninstall
 ```
 
 The uninstall flow removes the local `.ai-effectiveness/` folder, cleans marked project instruction blocks, and asks before removing any user-level AI client skill because that can affect other repositories.

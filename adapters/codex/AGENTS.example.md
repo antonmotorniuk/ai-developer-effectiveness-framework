@@ -20,7 +20,7 @@ Rules:
 
 - Save retros with `.ai-effectiveness/save_retro.py` and validate with `.ai-effectiveness/validate_session.py` when available.
 - Run only when the user explicitly asks to close, review, evaluate, or save an AI-assisted work session.
-- Accept short requests such as `close ai session`, `close session`, `save retro`, or `$ai-effectiveness-coach close`.
+- Accept short requests such as `close ai session`, `close session`, `save retro`, `$ai-coach close`, or `$ai-effectiveness-coach close`.
 - Infer a concise task title when the user does not provide one; ask only if it cannot be reasonably inferred.
 - Keep session closing explicit.
 - Do not use or create hooks of any kind for this framework.

@@ -31,7 +31,18 @@ The Codex adapter contains:
 ```text
 adapters/codex/AGENTS.example.md
 adapters/codex/skills/ai-effectiveness-coach/SKILL.md
+adapters/codex/skills/ai-coach/SKILL.md
 ```
+
+The `ai-effectiveness-coach` skill is the explicit retro adapter. The shorter `ai-coach` skill is a command alias for:
+
+- `$ai-coach help`
+- `$ai-coach close`
+- `$ai-coach update`
+- `$ai-coach add-provider <provider>`
+- `$ai-coach uninstall`
+
+Provider names refer to AI coding client adapters, not model vendors.
 
 ## Claude Code adapter
 

@@ -32,7 +32,9 @@ Project-local cleanup checklist:
 Optional client-level cleanup:
 If I ask for global/client cleanup too, inspect and ask before removing any of these paths:
 - `~/.codex/skills/ai-effectiveness-coach/`
+- `~/.codex/skills/ai-coach/`
 - `~/.agents/skills/ai-effectiveness-coach/`
+- `~/.agents/skills/ai-coach/`
 - the current Codex environment's equivalent user skill directory
 
 Important:
