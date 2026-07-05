@@ -1,53 +1,106 @@
 {
-  "schema_version": "ai-effectiveness-retro-v0.1",
+  "schema_version": "ai-effectiveness-retro-v0.2",
   "client": "codex",
   "model": "unknown",
   "task": "Fix login redirect bug",
   "task_type": "bugfix",
-  "overall_score": 72,
+  "task_profile": {
+    "complexity": "medium",
+    "risk_level": "medium",
+    "change_type": "app_code",
+    "codebase_familiarity": "medium",
+    "ai_role": "assistant",
+    "change_surface": ["auth flow", "tests"]
+  },
+  "overall_score": 0,
+  "score_confidence": {
+    "level": "medium",
+    "reason": "The prompt, touched files, and focused verification were visible; broader production behavior was not fully exercised."
+  },
   "dimensions": [
     {
       "name": "Problem framing",
       "score": 4,
+      "applicability": "important",
+      "weight": 1.0,
+      "weight_reason": "Clear framing mattered, but the task was already narrow.",
       "evidence": "The task and expected outcome were stated.",
       "improvement": "Add explicit acceptance criteria before implementation."
     },
     {
       "name": "Context quality",
       "score": 4,
+      "applicability": "important",
+      "weight": 1.0,
+      "weight_reason": "The agent needed relevant auth and routing context.",
       "evidence": "Relevant files and symptoms were inspected.",
       "improvement": "Include a failing reproduction when available."
     },
     {
       "name": "Planning discipline",
       "score": 3,
+      "applicability": "important",
+      "weight": 1.0,
+      "weight_reason": "A medium-risk bugfix benefits from a short plan and edge-case list.",
       "evidence": "A short implementation plan was used.",
       "improvement": "Call out edge cases before editing."
     },
     {
       "name": "Tool/model/mode usage",
       "score": 3,
+      "applicability": "important",
+      "weight": 1.0,
+      "weight_reason": "Repository search and focused editing were useful for this bugfix.",
       "evidence": "Repository search and targeted edits were used.",
       "improvement": "Use review mode for risky diffs when available."
     },
     {
       "name": "Verification discipline",
       "score": 3,
+      "applicability": "core",
+      "weight": 1.25,
+      "weight_reason": "A login redirect bug needs direct verification evidence.",
       "evidence": "A focused check was run.",
       "improvement": "Run the broader regression suite or record why it was skipped."
     },
     {
       "name": "Ownership and understanding",
       "score": 4,
+      "applicability": "core",
+      "weight": 1.25,
+      "weight_reason": "Auth-flow changes require the developer to understand the behavior being changed.",
       "evidence": "The developer reviewed the approach and constraints.",
       "improvement": "Ask for a brief explanation of any unfamiliar code path."
     },
     {
       "name": "Learning loop",
       "score": 4,
+      "applicability": "optional",
+      "weight": 0.5,
+      "weight_reason": "Reusable learning is helpful, but the immediate bugfix did not depend on it.",
       "evidence": "A reusable habit was captured for future sessions.",
       "improvement": "Update project instructions when the pattern repeats."
     }
+  ],
+  "expected_verification": [
+    {
+      "check": "Focused login redirect scenario",
+      "status": "done",
+      "evidence": "A targeted check was observed."
+    },
+    {
+      "check": "Broader auth regression suite",
+      "status": "skipped",
+      "evidence": "Not observed in the session."
+    }
+  ],
+  "scoring_notes": "Planning and verification were weighted for a medium-risk app-code bugfix; learning loop was useful but lower weight.",
+  "positive_signals": [
+    "repo_conventions_checked",
+    "small_batch_changes"
+  ],
+  "anti_pattern_flags": [
+    "unclear_acceptance_criteria"
   ],
   "what_worked": [
     "The task stayed narrow.",
@@ -60,7 +113,7 @@
   "risks": [
     "Edge cases may remain uncovered."
   ],
-  "recommendation": "Before implementation, ask the agent to list assumptions, edge cases, and verification steps.",
+  "recommendation": "Before implementation, ask the agent to list assumptions, edge cases, and verification steps appropriate to task risk.",
   "profile_update": {
     "strengths_observed": [
       "Good at narrowing a bugfix with AI."
@@ -68,6 +121,6 @@
     "weaknesses_or_antipatterns": [
       "Sometimes starts implementation before acceptance criteria are explicit."
     ],
-    "suggested_memory_or_rule": "Before implementation, list assumptions, edge cases, and verification steps."
+    "suggested_memory_or_rule": "Before implementation, list assumptions, edge cases, and verification steps appropriate to task risk."
   }
 }

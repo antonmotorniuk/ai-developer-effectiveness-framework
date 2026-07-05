@@ -14,112 +14,89 @@
     "profile_update"
   ],
   "properties": {
-    "schema_version": {
-      "type": "string"
-    },
-    "client": {
-      "type": "string"
-    },
-    "model": {
-      "type": "string"
-    },
-    "task": {
-      "type": "string"
-    },
+    "schema_version": { "type": "string" },
+    "client": { "type": "string" },
+    "model": { "type": "string" },
+    "task": { "type": "string" },
     "task_type": {
       "type": "string",
-      "enum": [
-        "bugfix",
-        "feature",
-        "refactor",
-        "test",
-        "docs",
-        "investigation",
-        "review",
-        "other"
-      ]
+      "enum": ["bugfix", "feature", "refactor", "test", "docs", "investigation", "review", "other"]
     },
-    "overall_score": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 100
+    "task_profile": {
+      "type": "object",
+      "properties": {
+        "complexity": { "type": "string", "enum": ["small", "medium", "large", "unknown"] },
+        "risk_level": { "type": "string", "enum": ["low", "medium", "high", "unknown"] },
+        "change_type": { "type": "string" },
+        "codebase_familiarity": { "type": "string", "enum": ["low", "medium", "high", "unknown"] },
+        "ai_role": { "type": "string", "enum": ["assistant", "pair", "reviewer", "researcher", "other", "unknown"] },
+        "change_surface": { "type": "array", "items": { "type": "string" } }
+      }
     },
+    "overall_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "score_calculation": {
+      "type": "object",
+      "properties": {
+        "method": { "type": "string" },
+        "dimension_scale": { "type": "string" },
+        "overall_scale": { "type": "string" },
+        "weighted_average": { "type": "number" },
+        "total_weight": { "type": "number" },
+        "calculated_overall_score": { "type": "number" },
+        "note": { "type": "string" }
+      }
+    },
+    "score_confidence": {
+      "type": "object",
+      "properties": {
+        "level": { "type": "string", "enum": ["low", "medium", "high", "unknown"] },
+        "reason": { "type": "string" }
+      }
+    },
+    "scoring_notes": { "type": "string" },
     "dimensions": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "name",
-          "score",
-          "evidence",
-          "improvement"
-        ],
+        "required": ["name", "score", "evidence", "improvement"],
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "score": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 5
-          },
-          "evidence": {
-            "type": "string"
-          },
-          "improvement": {
-            "type": "string"
-          }
+          "name": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 5 },
+          "applicability": { "type": "string", "enum": ["core", "important", "optional", "not_applicable"] },
+          "weight": { "type": "number", "minimum": 0, "maximum": 2 },
+          "weighted_score": { "type": "number", "minimum": 0, "maximum": 10 },
+          "weight_reason": { "type": "string" },
+          "evidence": { "type": "string" },
+          "improvement": { "type": "string" }
         }
       }
     },
-    "what_worked": {
+    "expected_verification": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "object",
+        "properties": {
+          "check": { "type": "string" },
+          "status": { "type": "string", "enum": ["done", "skipped", "blocked", "not_applicable", "not_observed"] },
+          "evidence": { "type": "string" }
+        }
       }
     },
-    "what_reduced_effectiveness": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "risks": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "recommendation": {
-      "type": "string"
-    },
+    "positive_signals": { "type": "array", "items": { "type": "string" } },
+    "anti_pattern_flags": { "type": "array", "items": { "type": "string" } },
+    "what_worked": { "type": "array", "items": { "type": "string" } },
+    "what_reduced_effectiveness": { "type": "array", "items": { "type": "string" } },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "recommendation": { "type": "string" },
     "profile_update": {
       "type": "object",
-      "required": [
-        "strengths_observed",
-        "weaknesses_or_antipatterns",
-        "suggested_memory_or_rule"
-      ],
+      "required": ["strengths_observed", "weaknesses_or_antipatterns", "suggested_memory_or_rule"],
       "properties": {
-        "strengths_observed": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "weaknesses_or_antipatterns": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "suggested_memory_or_rule": {
-          "type": "string"
-        }
+        "strengths_observed": { "type": "array", "items": { "type": "string" } },
+        "weaknesses_or_antipatterns": { "type": "array", "items": { "type": "string" } },
+        "suggested_memory_or_rule": { "type": "string" }
       }
     },
-    "created_at": {
-      "type": "string"
-    }
+    "created_at": { "type": "string" }
   }
 }

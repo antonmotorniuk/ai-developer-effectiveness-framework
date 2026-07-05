@@ -1,5 +1,5 @@
 {
-  "schema_version": "ai-effectiveness-config-v0.1",
+  "schema_version": "ai-effectiveness-config-v0.2",
   "methodology_name": "AI Developer Effectiveness Framework",
   "purpose": "Personal coaching and research for improving AI-assisted software development workflow.",
   "not_for": [
@@ -21,5 +21,56 @@
     "dimension_max": 5,
     "overall_min": 0,
     "overall_max": 100
-  }
+  },
+  "scoring_model": {
+    "overall_method": "weighted_dimension_average",
+    "formula": "sum(score * weight) / sum(weight) / 5 * 100",
+    "principle": "Score the fit between the AI-assisted workflow and the task shape, not the amount of ceremony performed.",
+    "applicability": {
+      "core": "The dimension was essential for this task shape.",
+      "important": "The dimension mattered normally for this task shape.",
+      "optional": "The dimension was useful but lightweight evidence was enough.",
+      "not_applicable": "The dimension did not meaningfully apply to this task."
+    },
+    "default_weights": {
+      "core": 1.25,
+      "important": 1.0,
+      "optional": 0.5,
+      "not_applicable": 0.0
+    }
+  },
+  "task_profile_fields": [
+    "complexity",
+    "risk_level",
+    "change_type",
+    "codebase_familiarity",
+    "ai_role",
+    "change_surface"
+  ],
+  "verification_guidance": {
+    "small_low_risk_docs": "Review the rendered text, links, and consistency; heavy planning or unit tests are usually not required.",
+    "script_or_tooling": "Run syntax checks and at least one fixture, sample, or dry run when possible.",
+    "app_code": "Run focused tests, type/lint checks, or manual scenario checks appropriate to the change.",
+    "high_risk_change": "Expect explicit plan, stronger verification, rollback thinking, and clear developer ownership."
+  },
+  "positive_signals": [
+    "clear_acceptance_criteria",
+    "repo_conventions_checked",
+    "small_batch_changes",
+    "expected_checks_run",
+    "diff_reviewed",
+    "agent_errors_recovered_cleanly",
+    "developer_can_explain_change",
+    "learning_added_to_profile"
+  ],
+  "anti_pattern_flags": [
+    "unverified_ai_output",
+    "unclear_acceptance_criteria",
+    "context_dump_without_selection",
+    "large_unreviewed_diff",
+    "ai_used_for_wrong_task_shape",
+    "hallucinated_evidence",
+    "privacy_or_secret_risk",
+    "review_burden_shifted_to_humans"
+  ]
 }

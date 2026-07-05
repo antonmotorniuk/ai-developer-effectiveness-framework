@@ -27,6 +27,9 @@ Rules:
 - Do not interrupt normal development workflow.
 - Do not invent evidence.
 - If something was not visible in the session, write `not observed`.
+- Classify task complexity, risk, change type, codebase familiarity, AI role, and change surface before scoring.
+- Use adaptive scoring: mark each dimension as core, important, optional, or not applicable, then weight it by fit to the task.
+- Do not penalize small low-risk tasks for skipping heavy planning or tests that do not fit; do penalize missing planning or verification for risky or complex work.
 - Do not save secrets, tokens, credentials, private customer data, or large code snippets.
 - The goal is coaching and self-improvement, not performance evaluation or surveillance.
 <!-- ai-effectiveness:end -->

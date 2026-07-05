@@ -135,7 +135,7 @@ Each AI-assisted development session is evaluated across seven dimensions:
 6. Ownership and understanding
 7. Learning loop
 
-Each dimension is scored from `0` to `5`. The overall score is converted to a `0–100` scale.
+Each dimension is scored from `0` to `5`. The overall score is calculated as a weighted average so small, low-risk tasks are not punished for skipping heavy planning or tests that do not fit the work.
 
 ## What gets installed into a target project
 
@@ -186,56 +186,71 @@ Session output files:
 - `sessions.jsonl` is structured data for scripts, reports, and future personal analysis.
 - `profile-updates.md` stores repeated patterns, strengths, weaknesses, and coaching recommendations.
 
-## Example session record
+## Example Session Record
 
 ```json
 {
-  "schema_version": "ai-effectiveness-retro-v0.1",
+  "schema_version": "ai-effectiveness-retro-v0.2",
   "client": "codex",
   "model": "unknown",
   "task": "Fix login redirect bug",
   "task_type": "bugfix",
-  "overall_score": 72,
+  "task_profile": {
+    "complexity": "medium",
+    "risk_level": "medium",
+    "change_type": "app_code",
+    "codebase_familiarity": "medium",
+    "ai_role": "assistant",
+    "change_surface": ["auth flow", "tests"]
+  },
+  "overall_score": 0,
+  "score_confidence": {
+    "level": "medium",
+    "reason": "The prompt, touched files, and focused verification were visible; broader production behavior was not fully exercised."
+  },
   "dimensions": [
     {
       "name": "Problem framing",
       "score": 4,
-      "evidence": "The user described the bug and expected outcome.",
+      "applicability": "important",
+      "weight": 1.0,
+      "weight_reason": "Clear framing mattered, but the task was already narrow.",
+      "evidence": "The task and expected outcome were stated.",
       "improvement": "Add explicit acceptance criteria before implementation."
     },
     {
       "name": "Verification discipline",
       "score": 3,
-      "evidence": "Some tests were discussed, but full test execution was not observed.",
-      "improvement": "Run regression tests or document why they were not available."
+      "applicability": "core",
+      "weight": 1.25,
+      "weight_reason": "A login redirect bug needs direct verification evidence.",
+      "evidence": "A focused check was run.",
+      "improvement": "Run the broader regression suite or record why it was skipped."
     }
   ],
-  "what_worked": [
-    "The task was narrowed down quickly.",
-    "The diff was reviewed before finalizing.",
-    "The assistant was asked to explain the approach."
+  "expected_verification": [
+    {
+      "check": "Focused login redirect scenario",
+      "status": "done",
+      "evidence": "A targeted check was observed."
+    }
   ],
-  "what_reduced_effectiveness": [
-    "Acceptance criteria were not explicit.",
-    "Edge cases were considered late.",
-    "Verification evidence was incomplete."
-  ],
-  "risks": [
-    "AI-generated changes may miss edge cases.",
-    "Test coverage was not fully observed."
-  ],
-  "recommendation": "Before implementation, ask the AI to list assumptions, edge cases, and test cases.",
+  "scoring_notes": "Planning and verification were weighted for a medium-risk app-code bugfix.",
+  "positive_signals": ["repo_conventions_checked", "small_batch_changes"],
+  "anti_pattern_flags": ["unclear_acceptance_criteria"],
+  "what_worked": ["The task stayed narrow."],
+  "what_reduced_effectiveness": ["Acceptance criteria were implicit."],
+  "risks": ["Edge cases may remain uncovered."],
+  "recommendation": "Before implementation, ask the agent to list assumptions, edge cases, and verification steps appropriate to task risk.",
   "profile_update": {
-    "strengths_observed": [
-      "Good at narrowing down bugs with AI."
-    ],
-    "weaknesses_or_antipatterns": [
-      "Sometimes starts implementation before clarifying acceptance criteria."
-    ],
-    "suggested_memory_or_rule": "Before implementation, list assumptions, edge cases, and test cases."
+    "strengths_observed": ["Good at narrowing down bugs with AI."],
+    "weaknesses_or_antipatterns": ["Sometimes starts implementation before clarifying acceptance criteria."],
+    "suggested_memory_or_rule": "Before implementation, list assumptions, edge cases, and verification steps appropriate to task risk."
   }
 }
 ```
+
+When adaptive weights are present, `save_retro.py` recalculates `overall_score` from the weighted dimension average and records the calculation in `sessions.md`.
 
 ## What this is not
 
@@ -319,6 +334,7 @@ Unsupported providers should leave the core `.ai-effectiveness/` files untouched
 ## Roadmap
 
 - [x] Core session schema
+- [x] Adaptive task-profile and weighted scoring model
 - [x] Markdown + JSONL storage
 - [x] `save_retro.py`
 - [x] Codex adapter MVP

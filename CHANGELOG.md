@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added adaptive task profiles, dimension applicability, weights, score confidence, and expected verification fields;
+- updated the Codex close-session flow to calculate weighted scores based on task complexity and risk;
 - switched target-project installs to a local-first `.ai-effectiveness/` layout;
 - added `.ai-effectiveness/validate_session.py` to installed core files;
 - updated Codex closeout wording to use main improvement area language;

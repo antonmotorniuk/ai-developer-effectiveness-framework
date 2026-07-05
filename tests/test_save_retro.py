@@ -18,27 +18,60 @@ INSTALLED_VALIDATOR = Path(".ai-effectiveness") / "validate_session.py"
 
 def base_payload() -> dict:
     return {
-        "schema_version": "ai-effectiveness-retro-v0.1",
+        "schema_version": "ai-effectiveness-retro-v0.2",
         "created_at": "2026-01-01T00:00:00+00:00",
         "client": "codex",
         "model": "unknown",
         "task": "Add login redirect test",
         "task_type": "test",
-        "overall_score": 72,
+        "task_profile": {
+            "complexity": "medium",
+            "risk_level": "medium",
+            "change_type": "app_code",
+            "codebase_familiarity": "medium",
+            "ai_role": "assistant",
+            "change_surface": ["auth flow", "tests"],
+        },
+        "overall_score": 0,
+        "score_confidence": {
+            "level": "medium",
+            "reason": "The focused change and test evidence were visible.",
+        },
         "dimensions": [
             {
                 "name": "Problem framing",
                 "score": 4,
+                "applicability": "important",
+                "weight": 1.0,
+                "weight_reason": "The task was narrow but still needed expected behavior.",
                 "evidence": "Goal and expected behavior were stated.",
                 "improvement": "Add explicit edge cases before implementation.",
             },
             {
                 "name": "Verification discipline",
                 "score": 3,
+                "applicability": "core",
+                "weight": 1.25,
+                "weight_reason": "A test task depends heavily on verification evidence.",
                 "evidence": "A focused test was added.",
                 "improvement": "Run the broader regression suite when available.",
             },
         ],
+        "expected_verification": [
+            {
+                "check": "Focused login redirect test",
+                "status": "done",
+                "evidence": "The new test was observed.",
+            },
+            {
+                "check": "Broader auth regression suite",
+                "status": "skipped",
+                "evidence": "Not observed in this session.",
+            },
+        ],
+        "scoring_notes": "Verification was weighted as core because this was a test task.",
+        "positive_signals": ["small_batch_changes", "expected_checks_run"],
+        "anti_pattern_flags": ["unclear_acceptance_criteria"],
         "what_worked": ["The task stayed narrow."],
         "what_reduced_effectiveness": ["Acceptance criteria could be clearer."],
         "risks": ["Regression coverage may still be incomplete."],
@@ -102,12 +135,21 @@ class SaveRetroTests(unittest.TestCase):
             saved = json.loads(jsonl_path.read_text(encoding="utf-8").splitlines()[0])
             self.assertEqual(saved["task"], "Add login redirect test")
             self.assertEqual(saved["task_type"], "test")
-            self.assertEqual(saved["overall_score"], 72.0)
+            self.assertEqual(saved["schema_version"], "ai-effectiveness-retro-v0.2")
+            self.assertAlmostEqual(saved["overall_score"], 68.9)
+            self.assertEqual(saved["score_calculation"]["method"], "weighted_dimension_average")
+            self.assertEqual(saved["score_calculation"]["total_weight"], 2.25)
+            self.assertEqual(saved["task_profile"]["risk_level"], "medium")
+            self.assertEqual(saved["expected_verification"][0]["status"], "done")
             self.assertEqual(len(saved["dimensions"]), 2)
+            self.assertEqual(saved["dimensions"][1]["applicability"], "core")
+            self.assertEqual(saved["dimensions"][1]["weight"], 1.25)
 
             sessions_md = sessions_md_path.read_text(encoding="utf-8")
             self.assertIn("Add login redirect test", sessions_md)
-            self.assertIn("| Problem framing | 4.0 |", sessions_md)
+            self.assertIn("Score calculation", sessions_md)
+            self.assertIn("| Verification discipline | 3.0 | core | 1.25 |", sessions_md)
+            self.assertIn("Expected verification", sessions_md)
 
             profile_md = profile_path.read_text(encoding="utf-8")
             self.assertIn("Ask for acceptance criteria", profile_md)
@@ -116,12 +158,17 @@ class SaveRetroTests(unittest.TestCase):
             self.assertEqual(validation.returncode, 0, validation.stderr)
             self.assertIn("Validation passed: 1 session(s).", validation.stdout)
 
-    def test_normalizes_scores_task_type_and_sensitive_text(self) -> None:
+    def test_normalizes_scores_task_type_and_sensitive_text_for_legacy_payloads(self) -> None:
         payload = base_payload()
+        payload["schema_version"] = "ai-effectiveness-retro-v0.1"
         payload["task_type"] = "unsupported"
         payload["overall_score"] = 999
         payload["recommendation"] = "Use api_key=abc123 in the prompt."
         payload["what_worked"] = ["No secret here", "Token looked like sk-live-secret"]
+        for dimension in payload["dimensions"]:
+            dimension.pop("applicability", None)
+            dimension.pop("weight", None)
+            dimension.pop("weight_reason", None)
         payload["dimensions"][0]["score"] = -5
         payload["dimensions"][0]["evidence"] = "The password was pasted."
 
@@ -136,10 +183,38 @@ class SaveRetroTests(unittest.TestCase):
 
             self.assertEqual(saved["task_type"], "other")
             self.assertEqual(saved["overall_score"], 100.0)
+            self.assertEqual(saved["score_calculation"]["method"], "provided_overall_score")
             self.assertEqual(saved["dimensions"][0]["score"], 0.0)
             self.assertEqual(saved["dimensions"][0]["evidence"], "[REDACTED: possible secret]")
             self.assertEqual(saved["recommendation"], "[REDACTED: possible secret]")
             self.assertEqual(saved["what_worked"][1], "[REDACTED: possible secret]")
+
+    def test_not_applicable_dimensions_do_not_affect_adaptive_score(self) -> None:
+        payload = base_payload()
+        payload["dimensions"].append(
+            {
+                "name": "Planning discipline",
+                "score": 0,
+                "applicability": "not_applicable",
+                "weight": 2.0,
+                "weight_reason": "No separate plan was needed for this tiny follow-up.",
+                "evidence": "not observed",
+                "improvement": "not applicable",
+            }
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            result = run_save_retro(project, payload)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            jsonl_path = project / ".ai-effectiveness" / "sessions.jsonl"
+            saved = json.loads(jsonl_path.read_text(encoding="utf-8").splitlines()[0])
+
+            self.assertAlmostEqual(saved["overall_score"], 68.9)
+            self.assertEqual(saved["dimensions"][2]["weight"], 0.0)
+            self.assertEqual(saved["score_calculation"]["total_weight"], 2.25)
 
 
 if __name__ == "__main__":

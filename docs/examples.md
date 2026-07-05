@@ -1,6 +1,6 @@
 # Examples
 
-## Closing a session in Codex
+## Closing A Session In Codex
 
 ```text
 close ai session
@@ -24,7 +24,7 @@ Optional explicit task name:
 $ai-effectiveness-coach close for task "Fix login redirect bug"
 ```
 
-## Local framework commands
+## Local Framework Commands
 
 These are prompts to your AI agent, not terminal commands:
 
@@ -37,9 +37,9 @@ $ai-coach uninstall
 
 Use `add-provider` for AI coding client adapters such as `codex`, `claude-code`, or `cursor`.
 
-## Expected result
+## Expected Result
 
-The adapter produces a retro, then saves it through the local project script:
+The adapter produces an adaptive retro, then saves it through the local project script:
 
 ```bash
 python3 .ai-effectiveness/save_retro.py <<'JSON'
@@ -55,7 +55,9 @@ The framework updates:
 .ai-effectiveness/profile-updates.md
 ```
 
-## Sample retro input
+`sessions.md` contains the human-readable score explanation, including task profile, dimension applicability, weights, expected verification, and confidence.
+
+## Adaptive Scoring Smoke Check
 
 This repository includes a sample JSON retro at:
 
@@ -69,3 +71,5 @@ Use it as the input shape for a smoke check in any project where the framework i
 python3 .ai-effectiveness/save_retro.py < path/to/session-retro.sample.json
 python3 .ai-effectiveness/validate_session.py
 ```
+
+The sample intentionally sets `overall_score` to `0`. When adaptive dimension weights are present, `save_retro.py` recalculates the saved overall score from the weighted dimension average.

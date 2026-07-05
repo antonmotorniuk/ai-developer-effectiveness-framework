@@ -60,11 +60,15 @@ For `$ai-coach close`, `close ai session`, `close session`, or `save retro`:
 2. Infer a concise task title if the user does not provide one; ask only when no reasonable title can be inferred.
 3. Use only visible evidence from the conversation, repository context, git diff, commands, tests, tool calls, files changed, and local `.ai-effectiveness/` files.
 4. Do not invent evidence. If something was not visible, write `not observed`.
-5. Score these dimensions from 0 to 5: Problem framing, Context quality, Planning discipline, Tool/model/mode usage, Verification discipline, Ownership and understanding, Learning loop.
-6. Convert the average dimension score to 0-100.
-7. Save only summaries, scores, patterns, commands/tests observed, file paths, risks, and recommendations. Do not save secrets, tokens, private customer data, raw private chat transcripts, or large code snippets.
-8. Create a JSON retro with the framework schema: schema_version, client, model, task, task_type, overall_score, dimensions, what_worked, what_reduced_effectiveness, risks, recommendation, and profile_update.
-9. Save and validate with:
+5. Classify `task_profile` before scoring: complexity, risk_level, change_type, codebase_familiarity, ai_role, and change_surface.
+6. Score the seven dimensions from 0 to 5, but weight them by fit to the task shape.
+7. For each dimension, include `applicability`, `weight`, `weight_reason`, evidence, and improvement.
+8. Use `core` for dimensions essential to the task, `important` for normally relevant dimensions, `optional` where lightweight evidence is enough, and `not_applicable` where the dimension does not meaningfully apply.
+9. Calculate overall score as `sum(score * weight) / sum(weight) / 5 * 100`. The save script recalculates this when adaptive weights are present.
+10. Do not penalize small low-risk tasks for skipping heavy planning or unit tests when those checks do not fit. Do penalize missing planning or verification for complex, risky, production-sensitive, or broad tasks.
+11. Save only summaries, scores, patterns, commands/tests observed, file paths, risks, and recommendations. Do not save secrets, tokens, private customer data, raw private chat transcripts, or large code snippets.
+12. Create a JSON retro with the framework schema: schema_version, client, model, task, task_type, task_profile, overall_score, score_confidence, dimensions, expected_verification, scoring_notes, positive_signals, anti_pattern_flags, what_worked, what_reduced_effectiveness, risks, recommendation, and profile_update.
+13. Save and validate with:
 
 ```bash
 python3 .ai-effectiveness/save_retro.py <<'JSON'
@@ -79,8 +83,9 @@ After saving, tell the user:
 
 - overall score,
 - main improvement area or areas,
+- one-line score calculation and where to find the detailed breakdown,
 - main insight,
 - where the log was saved,
 - validation result, including whether `sessions.jsonl` contains a parsed session record,
-- that detailed dimension evidence and the score breakdown are in `.ai-effectiveness/sessions.md`,
+- that detailed dimension evidence, applicability, weights, expected verification, and score breakdown are in `.ai-effectiveness/sessions.md`,
 - one habit for the next task.
